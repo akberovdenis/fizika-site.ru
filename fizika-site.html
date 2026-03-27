@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Физика 7-10 класс | Максимум теории</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --panel: rgba(11, 18, 32, 0.72);
+      --panel-2: rgba(17, 24, 39, 0.8);
+      --line: rgba(148, 163, 184, 0.18);
+      --text: #e5eefc;
+      --muted: #96a4ba;
+      --accent: #7c3aed;
+      --accent-2: #22c55e;
+      --accent-3: #0ea5e9;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(124,58,237,.32), transparent 30%),
+        radial-gradient(circle at 85% 15%, rgba(14,165,233,.22), transparent 24%),
+        radial-gradient(circle at 20% 90%, rgba(34,197,94,.18), transparent 24%),
+        linear-gradient(160deg, #040814 0%, #0b1220 55%, #0f172a 100%);
+      min-height: 100vh;
+    }
+    .shell { min-height: 100vh; }
+    .glass {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: 0 24px 80px rgba(0,0,0,.35);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+    .glass-soft {
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid rgba(148,163,184,0.12);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .ring-inset { box-shadow: inset 0 1px 0 rgba(255,255,255,.05); }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: .55rem;
+      padding: .72rem 1rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,.18);
+      background: rgba(255,255,255,.03);
+      transition: transform .2s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
+      cursor: pointer;
+    }
+    .pill:hover { transform: translateY(-1px); border-color: rgba(255,255,255,.28); box-shadow: 0 10px 30px rgba(0,0,0,.22); }
+    .pill-active { background: linear-gradient(135deg, rgba(124,58,237,.28), rgba(14,165,233,.2)); border-color: rgba(167,139,250,.6); }
+    .section-title { letter-spacing: -0.03em; }
+    .grade-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 28px;
+      border: 1px solid rgba(148,163,184,.16);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+    }
+    .grade-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,.26); box-shadow: 0 20px 48px rgba(0,0,0,.28); }
+    .grade-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(255,255,255,.12), transparent 35%);
+      pointer-events: none;
+    }
+    .topic-rail {
+      max-height: 70vh;
+      overflow: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(148,163,184,.4) transparent;
+    }
+    .topic-chip {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 1rem 1rem;
+      border-radius: 20px;
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(148,163,184,.14);
+      transition: all .2s ease;
+    }
+    .topic-chip:hover {
+      transform: translateX(2px);
+      border-color: rgba(255,255,255,.24);
+      background: rgba(255,255,255,.06);
+    }
+    .topic-chip-active {
+      border-color: rgba(124,58,237,.6);
+      background: linear-gradient(135deg, rgba(124,58,237,.2), rgba(14,165,233,.12));
+      box-shadow: 0 16px 32px rgba(0,0,0,.2);
+    }
+    .article {
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(148,163,184,.14);
+      border-radius: 28px;
+      padding: clamp(1.2rem, 2vw, 2rem);
+    }
+    .content-block > div, .content-block > p { color: #dbe7ff; line-height: 1.75; }
+    .formula, .definition, .example, .task, .history {
+      color: #e9f2ff;
+      border-radius: 20px !important;
+      padding: 1rem 1.1rem !important;
+      margin: 1rem 0 !important;
+      border-left-width: 4px !important;
+    }
+    .formula { background: rgba(14,165,233,.12) !important; border-left-color: #38bdf8 !important; }
+    .definition { background: rgba(245,158,11,.12) !important; border-left-color: #f59e0b !important; }
+    .example { background: rgba(168,85,247,.12) !important; border-left-color: #a855f7 !important; }
+    .task { background: rgba(34,197,94,.11) !important; border-left-color: #22c55e !important; }
+    .history { background: rgba(148,163,184,.12) !important; border-left-color: #94a3b8 !important; }
+    .content-block h2, .content-block h3, .content-block h4 { color: #fff; }
+    .content-block strong { color: #fff; }
+    .soft-label {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .45rem .8rem;
+      border-radius: 999px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(148,163,184,.12);
+      color: var(--muted);
+    }
+    .navlink { color: #dce7ff; text-decoration: none; }
+    .navlink:hover { color: white; }
+    @media (max-width: 1024px) {
+      .topic-rail { max-height: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="sticky top-0 z-50 border-b border-white/10 glass-soft">
+      <div class="max-w-7xl mx-auto px-4 py-4">
+        <div class="flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
+              <i data-lucide="atom" class="w-6 h-6 text-cyan-300"></i>
+            </div>
+            <div class="min-w-0">
+              <div class="text-sm text-slate-300">Учебный портал</div>
+              <h1 class="text-lg md:text-2xl font-extrabold tracking-tight truncate">Физика для школьников</h1>
+            </div>
+          </div>
+          <div class="hidden lg:flex items-center gap-3">
+            <a href="#home" class="navlink soft-label"><i data-lucide="house" class="w-4 h-4"></i>Главная</a>
+            <a href="#about" class="navlink soft-label"><i data-lucide="sparkles" class="w-4 h-4"></i>О проекте</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main id="home" class="max-w-7xl mx-auto px-4 py-6 md:py-8">
+      <section class="grid grid-cols-1 xl:grid-cols-[320px_minmax(0,1fr)] gap-6 items-start">
+        <aside class="space-y-6 xl:sticky xl:top-24">
+          <div class="glass rounded-[32px] p-6 ring-inset">
+            <div class="flex items-start justify-between gap-4 mb-4">
+              <div>
+                <div class="soft-label mb-3"><i data-lucide="graduation-cap" class="w-4 h-4"></i>Школьная программа</div>
+                <h2 class="section-title text-3xl font-extrabold leading-tight">Изучайте физику с удовольствием</h2>
+              </div>
+              <div class="hidden sm:flex w-14 h-14 rounded-2xl bg-cyan-400/10 items-center justify-center border border-cyan-300/20">
+                <i data-lucide="book-open" class="w-7 h-7 text-cyan-300"></i>
+              </div>
+            </div>
+            <p class="text-slate-300 leading-relaxed">Более 40 тем с максимально подробными объяснениями, формулами и примерами для 7-10 классов.</p>
+            <div class="grid grid-cols-2 gap-3 mt-5 text-sm text-slate-300">
+              <div class="glass-soft rounded-2xl p-4">
+                <div class="text-white font-bold text-xl">40+</div>
+                <div>тем</div>
+              </div>
+              <div class="glass-soft rounded-2xl p-4">
+                <div class="text-white font-bold text-xl">7-10</div>
+                <div>классы</div>
+              </div>
+            </div>
+          </div>
+
+          <section id="classSelection" class="space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="font-bold text-lg">Классы</h3>
+              <span class="text-xs text-slate-400">выберите раздел</span>
+            </div>
+            <div class="grid grid-cols-1 gap-3">
+              <button class="class-btn grade-card p-4 text-left" data-grade="7">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <div class="soft-label mb-3"><i data-lucide="flask-conical" class="w-4 h-4"></i>7 класс</div>
+                    <h4 class="text-xl font-bold mb-2">Начало физики</h4>
+                    <p class="text-slate-300 text-sm leading-relaxed">Основные понятия, строение вещества, механика, давление, работа, энергия (10 тем).</p>
+                  </div>
+                  <div class="w-11 h-11 rounded-2xl bg-blue-400/10 border border-blue-300/20 flex items-center justify-center text-blue-200">01</div>
+                </div>
+              </button>
+              <button class="class-btn grade-card p-4 text-left" data-grade="8">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <div class="soft-label mb-3"><i data-lucide="thermometer" class="w-4 h-4"></i>8 класс</div>
+                    <h4 class="text-xl font-bold mb-2">Теплота и электричество</h4>
+                    <p class="text-slate-300 text-sm leading-relaxed">Тепловые явления, электрические цепи, электромагнетизм, оптика (10 тем).</p>
+                  </div>
+                  <div class="w-11 h-11 rounded-2xl bg-emerald-400/10 border border-emerald-300/20 flex items-center justify-center text-emerald-200">02</div>
+                </div>
+              </button>
+              <button class="class-btn grade-card p-4 text-left" data-grade="9">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <div class="soft-label mb-3"><i data-lucide="zap" class="w-4 h-4"></i>9 класс</div>
+                    <h4 class="text-xl font-bold mb-2">Движение и поля</h4>
+                    <p class="text-slate-300 text-sm leading-relaxed">Кинематика, динамика, законы сохранения, колебания и волны, электромагнетизм (10 тем).</p>
+                  </div>
+                  <div class="w-11 h-11 rounded-2xl bg-violet-400/10 border border-violet-300/20 flex items-center justify-center text-violet-200">03</div>
+                </div>
+              </button>
+              <button class="class-btn grade-card p-4 text-left" data-grade="10">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <div class="soft-label mb-3"><i data-lucide="atom" class="w-4 h-4"></i>10 класс</div>
+                    <h4 class="text-xl font-bold mb-2">Молекулярка и электростатика</h4>
+                    <p class="text-slate-300 text-sm leading-relaxed">МКТ, термодинамика, основы электродинамики, квантовая физика (10 тем).</p>
+                  </div>
+                  <div class="w-11 h-11 rounded-2xl bg-amber-400/10 border border-amber-300/20 flex items-center justify-center text-amber-200">04</div>
+                </div>
+              </button>
+            </div>
+          </section>
+        </aside>
+
+        <section class="space-y-6">
+          <section class="glass rounded-[32px] p-6 md:p-8 ring-inset flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5">
+            <div>
+              <div class="soft-label mb-4"><i data-lucide="zap" class="w-4 h-4"></i>Познай природу</div>
+              <h2 class="section-title text-3xl md:text-4xl font-black tracking-tight">Физика — это ключ к пониманию мира</h2>
+              <p class="mt-3 text-slate-300 max-w-2xl leading-relaxed">От микромира до космических масштабов — физика объясняет, как устроено всё вокруг. Изучайте законы движения, теплоты, электричества и света, чтобы видеть скрытые механизмы Вселенной. Наш курс охватывает 7–10 классы: от первых опытов до квантовых явлений.</p>
+            </div>
+            <div class="grid grid-cols-2 gap-3 min-w-[240px]">
+              <div class="glass-soft rounded-2xl p-4">
+                <div class="text-white font-bold">Формулы</div>
+                <div class="text-slate-400 text-sm">и законы</div>
+              </div>
+              <div class="glass-soft rounded-2xl p-4">
+                <div class="text-white font-bold">Задачи</div>
+                <div class="text-slate-400 text-sm">с решениями</div>
+              </div>
+            </div>
+          </section>
+
+          <section id="topicsContainer" class="hidden grid grid-cols-1 xl:grid-cols-[360px_minmax(0,1fr)] gap-6 items-start">
+            <div class="glass rounded-[32px] p-5 md:p-6 ring-inset">
+              <div class="flex items-center justify-between gap-3 mb-4">
+                <div>
+                  <div class="text-slate-400 text-sm">Выбранный класс</div>
+                  <h3 class="text-2xl font-extrabold">Класс <span id="currentGrade"></span></h3>
+                </div>
+                <button id="backToClasses" class="soft-label"><i data-lucide="arrow-left" class="w-4 h-4"></i>Назад</button>
+              </div>
+              <div class="soft-label mb-4"><i data-lucide="list-tree" class="w-4 h-4"></i>Список тем</div>
+              <div id="topicsList" class="topic-rail space-y-3 pr-1"></div>
+            </div>
+
+            <div id="topicDetailContainer" class="hidden article ring-inset">
+              <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+                <button id="backToTopics" class="soft-label"><i data-lucide="arrow-left" class="w-4 h-4"></i>К темам</button>
+                <div class="soft-label"><i data-lucide="scroll-text" class="w-4 h-4"></i>Подробный конспект</div>
+              </div>
+              <h2 id="topicTitle" class="text-3xl md:text-4xl font-black tracking-tight mb-5"></h2>
+              <div id="topicContent" class="content-block"></div>
+            </div>
+
+            <div id="topicPlaceholder" class="article ring-inset flex items-center justify-center min-h-[40vh] text-center">
+              <div class="max-w-md">
+                <div class="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-4">
+                  <i data-lucide="mouse-pointer-click" class="w-8 h-8 text-cyan-300"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-3">Выберите класс слева</h3>
+                <p class="text-slate-300 leading-relaxed">После выбора откроется список тем, а затем — полный текст темы в отдельной панели.</p>
+              </div>
+            </div>
+          </section>
+
+          <section id="about" class="glass rounded-[32px] p-6 md:p-8 ring-inset">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-2xl bg-violet-400/10 border border-violet-300/20 flex items-center justify-center shrink-0">
+                <i data-lucide="lightbulb" class="w-6 h-6 text-violet-200"></i>
+              </div>
+              <div>
+                <h3 class="text-2xl font-extrabold mb-3">О проекте</h3>
+                <p class="text-slate-300 max-w-3xl leading-relaxed">Более 40 тем с максимально подробными объяснениями, формулами и примерами. Материалы составлены по школьной программе.</p>
+              </div>
+            </div>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <footer class="border-t border-white/10 py-8 text-center text-slate-400">
+      <div class="max-w-7xl mx-auto px-4">© 2026 Физика для школьников. Все материалы для образовательных целей.</div>
+    </footer>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    // ПОЛНАЯ БАЗА ТЕМ (восстановлена из исходного файла)
+    const topicsDB = {
+      7: {
+        name: "7",
+        topics: {
+          "Физика и физические методы изучения природы": { content: `<h2 class="text-2xl font-bold mb-4">Что изучает физика?</h2><p>Физика — фундаментальная наука о природе, изучающая простейшие и наиболее общие свойства материи, формы её движения и изменения. Она лежит в основе естествознания и техники. Физические явления окружают нас повсюду: механические (движение автомобиля, падение камня), тепловые (нагревание солнцем, кипение воды), электрические (молния, работа электроприборов), световые (радуга, отражение в зеркале), звуковые (эхо, музыка).</p><div class="definition"><strong>Физическая величина</strong> — характеристика свойства тела или явления, которую можно измерить с помощью приборов. Примеры: длина (м), масса (кг), время (с), температура (К), сила (Н).</div><div class="formula">Цена деления шкалы прибора: (максимальное значение - минимальное значение) / количество делений. Погрешность измерений принимается равной половине цены деления.</div><div class="example">Пример: медицинский термометр имеет шкалу от 35°C до 42°C, 70 делений. Цена деления = (42-35)/70 = 0,1°C. Погрешность = 0,05°C. Поэтому температуру измеряют с точностью до десятых.</div><div class="history">Историческая справка: слово «физика» происходит от греческого «фюзис» — природа. Основоположниками физики как науки считаются Галилео Галилей и Исаак Ньютон. Галилей впервые применил экспериментальный метод, а Ньютон сформулировал законы механики и закон всемирного тяготения.</div><div class="task">Вопрос для самопроверки: Какие физические явления вы наблюдаете, когда кипятите чайник? (Ответ: тепловые — нагревание, парообразование; механические — движение пузырьков; звуковые — шум кипения).</div><p>Основные единицы Международной системы (СИ): метр (м) — длина, килограмм (кг) — масса, секунда (с) — время, кельвин (К) — термодинамическая температура. В физике важны измерения: любую теорию проверяют опытом. Поэтому физика — экспериментальная наука.</p>` },
+          "Строение вещества. Молекулы и атомы": { content: `<h2 class="text-2xl font-bold mb-4">Молекулярное строение вещества</h2><p>Все вещества состоят из мельчайших частиц — молекул. Молекулы, в свою очередь, состоят из атомов. Атомы разных химических элементов отличаются массой и размерами. Между молекулами существуют промежутки, и они непрерывно и хаотично движутся. Это подтверждается явлением диффузии и броуновским движением.</p><div class="definition"><strong>Диффузия</strong> — взаимное проникновение молекул одного вещества в промежутки между молекулами другого. Скорость диффузии растёт с повышением температуры и уменьшением массы молекул.</div><div class="definition"><strong>Броуновское движение</strong> — беспорядочное движение мельчайших взвешенных частиц под ударами молекул жидкости или газа. Открыто Робертом Броуном в 1827 году.</div><div class="formula">Размеры молекул: ≈ 10⁻¹⁰ м. Число молекул в одном моле вещества (постоянная Авогадро) N<sub>А</sub> = 6,022·10²³ моль⁻¹.</div><div class="example">Пример диффузии: если в стакан с водой капнуть чернила, через некоторое время вода равномерно окрасится, даже без перемешивания. В горячей воде это происходит быстрее.</div><div class="history">Ломоносов в XVIII веке утверждал, что все тела состоят из корпускул (молекул). Его идеи опередили время.</div><div class="task">Задача: Почему в твёрдых телах диффузия происходит очень медленно? (Ответ: молекулы твёрдых тел колеблются около положений равновесия, перемещения затруднены).</div><p>Существуют три агрегатных состояния: твёрдое (сохраняет форму и объём), жидкое (сохраняет объём, но текуче), газообразное (занимает весь предоставленный объём). Переходы между состояниями называются фазовыми переходами (плавление, кристаллизация, испарение, конденсация).</p>` },
+          "Механическое движение. Траектория. Путь": { content: `<h2 class="text-2xl font-bold mb-4">Относительность движения</h2><p>Механическое движение — изменение положения тела относительно других тел с течением времени. Движение всегда относительно: одно и то же тело может покоиться относительно одних тел и двигаться относительно других. Например, пассажир в поезде покоится относительно вагона, но движется относительно земли.</p><div class="definition"><strong>Траектория</strong> — линия, по которой движется тело. Она может быть прямой или кривой. <strong>Путь (S)</strong> — длина траектории, скалярная величина. <strong>Перемещение</strong> — вектор, соединяющий начальную и конечную точки траектории.</div><div class="formula">Скорость равномерного прямолинейного движения: v = S / t (м/с). Путь при равномерном движении: S = v·t. Средняя скорость при неравномерном движении: v<sub>ср</sub> = весь путь / всё время.</div><div class="example">Пример: велосипедист проехал 15 км за 1 час, затем 10 км за 0,5 часа. Средняя скорость = (15+10) / (1+0,5) = 25 / 1,5 ≈ 16,7 км/ч.</div><div class="task">Задача: Автомобиль движется равномерно со скоростью 72 км/ч. Какой путь он пройдёт за 20 минут? Решение: 20 мин = 1/3 ч; S = 72·(1/3) = 24 км.</div><p>Графики движения: на графике S(t) для равномерного движения получается прямая линия, тангенс угла наклона которой равен скорости. На графике v(t) скорость изображается горизонтальной прямой, а путь — площадью под графиком.</p>` },
+          "Инерция. Взаимодействие тел. Масса": { content: `<h2 class="text-2xl font-bold mb-4">Инерция и масса</h2><p>Инерция — явление сохранения скорости тела при отсутствии внешних воздействий. Если на тело не действуют другие тела, оно движется равномерно и прямолинейно или покоится. Это первый закон Ньютона. Инертность — свойство тела сопротивляться изменению скорости. Мерой инертности является масса.</p><div class="definition"><strong>Масса</strong> — скалярная физическая величина, мера инертности тела. Единица измерения в СИ — килограмм (кг). Масса — аддитивная величина: масса системы равна сумме масс её частей.</div><div class="formula">Плотность вещества: ρ = m / V (кг/м³). Плотность показывает, какая масса приходится на единицу объёма. Для однородного тела m = ρ·V, V = m/ρ.</div><div class="example">Плотность воды 1000 кг/м³, алюминия 2700 кг/м³, стали 7800 кг/м³. Тело из алюминия объёмом 0,2 м³ имеет массу 540 кг.</div><div class="history">Понятие массы ввёл Ньютон. Он определял массу как количество вещества, а также как меру инерции. В современной физике масса связана с энергией (E = mc²).</div><div class="task">Задача: В мензурку налили 150 мл воды. Определите массу воды. (Ответ: m = ρV = 1000 кг/м³ · 0,00015 м³ = 0,15 кг = 150 г).</div>` },
+          "Сила. Сила тяжести. Вес тела": { content: `<h2 class="text-2xl font-bold mb-4">Сила — причина изменения скорости</h2><p>Сила — векторная физическая величина, характеризующая взаимодействие тел. Она является причиной изменения скорости (появления ускорения). Измеряется в ньютонах (Н). Сила тяжести — сила, с которой Земля притягивает тело: F<sub>тяж</sub> = m·g, где g ≈ 9,8 Н/кг (ускорение свободного падения). Вес тела — сила, с которой тело давит на опору или подвес вследствие притяжения к Земле. Если опора неподвижна, то вес численно равен силе тяжести: P = m·g.</p><div class="definition"><strong>Сила упругости</strong> возникает при деформации тела и стремится восстановить его форму. Закон Гука: F<sub>упр</sub> = -k·Δx, где k — жёсткость (Н/м), Δx — деформация (м). Знак минус указывает на противоположное направление.</div><div class="formula">Равнодействующая сила: R = F₁ + F₂ + … (векторная сумма). Если силы направлены в одну сторону, R = F₁ + F₂; если противоположно — R = |F₁ - F₂|.</div><div class="example">Пример: динамометр с жёсткостью 100 Н/м растянули на 5 см. Сила упругости F = 100·0,05 = 5 Н.</div><div class="task">Задача: Каков вес чугунной гири объёмом 0,002 м³? Плотность чугуна 7000 кг/м³. Решение: m = 7000·0,002 = 14 кг; P = mg = 14·10 = 140 Н.</div>` },
+          "Давление твёрдых тел, жидкостей и газов": { content: `<h2 class="text-2xl font-bold mb-4">Давление</h2><p>Давление — скалярная величина, равная отношению силы, действующей перпендикулярно поверхности, к площади этой поверхности: p = F / S (Па). 1 Па = 1 Н/м². Давление жидкости на глубине h: p = ρ·g·h (гидростатическое давление). Это формула справедлива для покоящейся жидкости.</p><div class="definition"><strong>Закон Паскаля</strong>: давление, производимое на жидкость или газ, передаётся без изменения в каждую точку объёма. Благодаря этому работают гидравлические прессы, тормозные системы.</div><div class="formula">Сообщающиеся сосуды: однородная жидкость устанавливается на одном уровне; разнородные жидкости — высоты столбов обратно пропорциональны плотностям: h₁/h₂ = ρ₂/ρ₁.</div><div class="example">Атмосферное давление на уровне моря ≈ 101 325 Па = 760 мм рт. ст. С подъёмом на каждые 12 м давление падает примерно на 1 мм рт. ст. (на 133 Па).</div><div class="history">Эванджелиста Торричелли в 1643 году измерил атмосферное давление с помощью ртутного барометра. Опыт Паскаля показал, что давление уменьшается с высотой.</div><div class="task">Задача: На какой глубине в море давление воды составляет 200 кПа? Плотность морской воды 1030 кг/м³. Решение: h = p/(ρg) = 200000/(1030·10) ≈ 19,4 м.</div>` },
+          "Архимедова сила. Плавание тел": { content: `<h2 class="text-2xl font-bold mb-4">Закон Архимеда</h2><p>На тело, погружённое в жидкость или газ, действует выталкивающая сила, равная весу вытесненной жидкости (газа): F<sub>А</sub> = ρ<sub>ж</sub>·g·V<sub>погр</sub>. Эта сила направлена вертикально вверх.</p><div class="definition">Условия плавания тел: если F<sub>А</sub> > mg — тело всплывает; F<sub>А</sub> = mg — тело плавает внутри жидкости; F<sub>А</sub> < mg — тело тонет. Для плавания тел на поверхности: ρ<sub>т</sub> < ρ<sub>ж</sub>.</div><div class="formula">Вес тела в жидкости: P<sub>ж</sub> = mg - F<sub>А</sub>. Плавание судов: осадка, ватерлиния, водоизмещение.</div><div class="example">Льдина объёмом 2 м³ плавает в воде. Под водой находится 90% объёма, т.к. ρ<sub>льда</sub>/ρ<sub>воды</sub> = 900/1000 = 0,9. F<sub>А</sub> = 1000·10·1,8 = 18000 Н, вес льдины = 900·2·10 = 18000 Н.</div><div class="history">Легенда гласит, что Архимед открыл свой закон, когда размышлял о том, как определить содержание золота в короне царя Гиерона. Он воскликнул «Эврика!», выскочив из ванны.</div><div class="task">Задача: Каков объём подводной части айсберга, если его объём 5000 м³? (ρ<sub>льда</sub>=900 кг/м³, ρ<sub>воды</sub>=1000 кг/м³). Решение: V<sub>подв</sub> = (ρ<sub>льда</sub>/ρ<sub>воды</sub>)·V = 0,9·5000 = 4500 м³.</div>` },
+          "Работа. Мощность. Энергия": { content: `<h2 class="text-2xl font-bold mb-4">Механическая работа и мощность</h2><p>Механическая работа совершается, когда на тело действует сила и оно перемещается. A = F·S·cosα, где α — угол между направлением силы и перемещения. Работа измеряется в джоулях (Дж). Мощность — скорость выполнения работы: N = A / t (Вт).</p><div class="definition">Простые механизмы: рычаг, блок, наклонная плоскость. Они позволяют получить выигрыш в силе (но проигрыш в расстоянии).</div><div class="formula">Правило равновесия рычага: F₁·L₁ = F₂·L₂. КПД механизма: η = (A<sub>полезная</sub> / A<sub>затраченная</sub>)·100%. Для наклонной плоскости: КПД = mgh / (F·L).</div><div class="example">Подъём груза массой 50 кг на высоту 2 м с помощью подвижного блока. Полезная работа = mgh = 50·10·2 = 1000 Дж. Если приложили силу 300 Н на верёвке длиной 4 м, затраченная работа = 300·4 = 1200 Дж. КПД = 1000/1200 ≈ 83,3%.</div>` },
+          "Закон сохранения энергии. Простые механизмы": { content: `<h2 class="text-2xl font-bold mb-4">Превращение энергии</h2><p>Кинетическая энергия — энергия движения: E<sub>к</sub> = mv²/2. Потенциальная энергия — энергия взаимодействия: в поле тяжести E<sub>п</sub> = mgh; упруго деформированного тела E<sub>п</sub> = kx²/2.</p><div class="formula">Закон сохранения механической энергии: в замкнутой системе, где действуют только консервативные силы, полная механическая энергия сохраняется: E<sub>к1</sub> + E<sub>п1</sub> = E<sub>к2</sub> + E<sub>п2</sub>.</div><div class="example">Шар массой 0,2 кг брошен вертикально вверх со скоростью 15 м/с. Начальная кинетическая = 0,2·225/2 = 22,5 Дж. На высоте 5 м потенциальная = 0,2·10·5 = 10 Дж, кинетическая = 12,5 Дж. Скорость на этой высоте: v = √(2·12,5/0,2) ≈ 11,2 м/с.</div><div class="task">Задача: С какой скоростью упадёт на землю камень, брошенный горизонтально с высоты 20 м? (Решение: по вертикали — свободное падение: v<sub>верт</sub> = √(2gh) = √400 = 20 м/с; горизонтальная скорость сохраняется).</div>` },
+          "Повторение и обобщение. Решение задач": { content: `<h2 class="text-2xl font-bold mb-4">Итоговое повторение</h2><p>Основные формулы 7 класса:</p><div class="formula">v = S/t, ρ = m/V, p = F/S, p = ρgh, F<sub>А</sub> = ρ<sub>ж</sub>gV<sub>погр</sub>, A = F·S, N = A/t, E<sub>к</sub> = mv²/2, E<sub>п</sub> = mgh.</div><div class="example">Комплексная задача: Определите массу мраморной колонны высотой 4 м и площадью основания 0,5 м², а также давление, которое она оказывает на фундамент. Плотность мрамора 2700 кг/м³. Решение: V = 4·0,5 = 2 м³; m = 2700·2 = 5400 кг; вес P = mg = 54000 Н; давление p = F/S = 54000 / 0,5 = 108000 Па = 108 кПа.</div><div class="task">Вопросы для самопроверки: 1) Почему трактор имеет широкие гусеницы? 2) Почему в жидкостях давление передаётся одинаково во все стороны? 3) Какие превращения энергии происходят при падении мяча на пол?</div>` }
+        }
+      },
+      8: {
+        name: "8",
+        topics: {
+          "Тепловое движение. Внутренняя энергия": { content: `<h2 class="text-2xl font-bold mb-4">Температура и внутренняя энергия</h2><p>Температура — физическая величина, характеризующая степень нагретости тела и являющаяся мерой средней кинетической энергии хаотического движения молекул: E<sub>ср</sub> = (3/2)kT, где k = 1,38·10⁻²³ Дж/К — постоянная Больцмана. Внутренняя энергия тела — сумма кинетической энергии всех молекул и потенциальной энергии их взаимодействия. Для идеального газа внутренняя энергия зависит только от температуры: U = (3/2)νRT.</p><div class="definition">Способы изменения внутренней энергии: теплопередача и совершение работы. При совершении работы (трение, удар) внутренняя энергия увеличивается; при теплопередаче энергия передаётся от более нагретых тел к менее нагретым.</div><div class="formula">Первый закон термодинамики: ΔU = Q + A', где A' — работа внешних сил над системой. Если система сама совершает работу A, то ΔU = Q - A.</div><div class="example">При трении деревянных брусков друг о друга они нагреваются — механическая работа переходит во внутреннюю энергию.</div><div class="task">Задача: Как изменится внутренняя энергия газа при сжатии, если ему передано 500 Дж теплоты, а внешние силы совершили работу 300 Дж? (Ответ: ΔU = 800 Дж).</div>` },
+          "Виды теплопередачи. Количество теплоты": { content: `<h2 class="text-2xl font-bold mb-4">Теплопередача</h2><p>Теплопередача осуществляется тремя способами: теплопроводность (передача энергии от более нагретых участков к менее нагретым при непосредственном контакте), конвекция (передача потоками жидкости или газа), излучение (перенос энергии электромагнитными волнами).</p><div class="formula">Количество теплоты, необходимое для нагревания тела: Q = c·m·Δt, где c — удельная теплоёмкость вещества (Дж/(кг·°С)). Для охлаждения формула та же, но Δt берётся по модулю.</div><div class="definition">Уравнение теплового баланса: сумма количеств теплоты, отданных более горячими телами, равна сумме количеств теплоты, полученных более холодными телами (при отсутствии потерь). Q<sub>отд</sub> = Q<sub>пол</sub>.</div><div class="example">Смешали 0,5 кг воды при 80°C и 1 кг воды при 20°C. Найти температуру смеси. Решение: c·0,5·(80-t) = c·1·(t-20) → 40 - 0,5t = t - 20 → 60 = 1,5t → t = 40°C.</div>` },
+          "Плавление и отвердевание. Парообразование и конденсация": { content: `<h2 class="text-2xl font-bold mb-4">Агрегатные переходы</h2><p>Плавление — переход из твёрдого состояния в жидкое. Для плавления необходимо количество теплоты Q = λ·m, где λ — удельная теплота плавления (Дж/кг). При кристаллизации (отвердевании) выделяется такое же количество теплоты. Парообразование может происходить в виде испарения (с поверхности) и кипения (во всём объёме). Для превращения жидкости в пар требуется Q = L·m, где L — удельная теплота парообразования (Дж/кг). При конденсации пара выделяется Q = L·m.</p><div class="formula">Удельная теплота плавления льда λ = 3,4·10⁵ Дж/кг, удельная теплота парообразования воды L = 2,3·10⁶ Дж/кг.</div><div class="example">Сколько тепла нужно, чтобы расплавить 2 кг льда при 0°C и полученную воду нагреть до 20°C? Решение: Q₁ = λm = 3,4·10⁵·2 = 6,8·10⁵ Дж; Q₂ = c·m·Δt = 4200·2·20 = 1,68·10⁵ Дж; Q = 8,48·10⁵ Дж.</div><div class="history">Учёные долгое время не могли объяснить, почему при плавлении температура не повышается, пока Джеймс Джоуль не связал это с затратами энергии на разрушение кристаллической решётки.</div>` },
+          "Влажность воздуха. Тепловые двигатели": { content: `<h2 class="text-2xl font-bold mb-4">Влажность и двигатели</h2><p>Абсолютная влажность — масса водяного пара в 1 м³ воздуха (плотность пара). Относительная влажность — отношение абсолютной влажности к плотности насыщенного пара при данной температуре, выраженное в процентах: φ = (ρ/ρ<sub>нас</sub>)·100% = (p/p<sub>нас</sub>)·100%. Точка росы — температура, при которой пар становится насыщенным.</p><div class="formula">КПД теплового двигателя: η = (Q<sub>н</sub> - Q<sub>х</sub>) / Q<sub>н</sub> = 1 - Q<sub>х</sub>/Q<sub>н</sub>. Для идеальной тепловой машины (цикл Карно) η = 1 - T<sub>х</sub>/T<sub>н</sub>, где T — температуры в кельвинах.</div><div class="example">Тепловой двигатель получает 1000 Дж теплоты от нагревателя и отдаёт 600 Дж холодильнику. КПД = (1000-600)/1000 = 40%.</div>` },
+          "Электризация тел. Электрическое поле": { content: `<h2 class="text-2xl font-bold mb-4">Электрический заряд</h2><p>Существует два рода электрических зарядов: положительный (стекло, потёртое о шёлк) и отрицательный (эбонит, потёртый о шерсть). Одноимённые заряды отталкиваются, разноимённые притягиваются. Закон сохранения электрического заряда: в изолированной системе алгебраическая сумма зарядов остаётся постоянной.</p><div class="formula">Закон Кулона: F = k·|q₁·q₂|/r², где k = 9·10⁹ Н·м²/Кл². Напряжённость электрического поля — силовая характеристика: E = F/q (Н/Кл). Для точечного заряда E = k·|q|/r².</div><div class="example">Два точечных заряда по 1 мкКл на расстоянии 10 см взаимодействуют с силой F = 9·10⁹·(10⁻⁶)²/(0,1)² = 0,9 Н.</div>` },
+          "Постоянный ток. Сила тока, напряжение, сопротивление": { content: `<h2 class="text-2xl font-bold mb-4">Основы электричества</h2><p>Сила тока — количество заряда, проходящее через поперечное сечение проводника за 1 секунду: I = q/t (А). Напряжение — работа электрического поля по перемещению единичного заряда: U = A/q (В). Сопротивление характеризует способность проводника препятствовать току: R = ρ·l/S, где ρ — удельное сопротивление (Ом·м).</p><div class="formula">Закон Ома для участка цепи: I = U/R. Последовательное соединение: I = I₁ = I₂, U = U₁+U₂, R = R₁+R₂. Параллельное: U = U₁ = U₂, I = I₁+I₂, 1/R = 1/R₁+1/R₂.</div><div class="example">Два резистора 10 Ом и 20 Ом соединены последовательно. Общее сопротивление = 30 Ом. Если напряжение 30 В, ток I = 1 А.</div>` },
+          "Работа и мощность тока. Закон Джоуля-Ленца": { content: `<h2 class="text-2xl font-bold mb-4">Тепловое действие тока</h2><p>Работа электрического тока: A = U·I·t = I²·R·t = U²·t/R (Дж). Мощность: P = U·I = I²·R = U²/R (Вт). Закон Джоуля-Ленца: количество теплоты, выделяемое проводником с током, Q = I²·R·t.</p><div class="example">Электрический чайник мощностью 2000 Вт за 3 минуты (180 с) выделяет Q = P·t = 2000·180 = 360 000 Дж = 360 кДж.</div>` },
+          "Магнитное поле тока. Электромагниты": { content: `<h2 class="text-2xl font-bold mb-4">Магнитное поле</h2><p>Вокруг проводника с током возникает магнитное поле. Его направление определяется правилом буравчика (правого винта). Силовая характеристика — магнитная индукция B (Тл). На проводник с током в магнитном поле действует сила Ампера: F<sub>А</sub> = B·I·L·sinα. Соленоид — катушка с током, внутри неё поле однородно, индукция B = μ₀·n·I, где n — число витков на метр.</p><div class="example">В однородном поле с B = 0,5 Тл перпендикулярно линиям поля расположен проводник длиной 0,2 м с током 3 А. Сила Ампера = 0,5·3·0,2 = 0,3 Н.</div>` },
+          "Постоянные магниты. Электродвигатель": { content: `<h2 class="text-2xl font-bold mb-4">Магниты и двигатели</h2><p>Постоянные магниты имеют северный (N) и южный (S) полюса. Одноимённые полюса отталкиваются, разноимённые притягиваются. Электродвигатель постоянного тока использует взаимодействие рамки с током и магнитного поля для создания вращающего момента. Применение: вентиляторы, электроинструмент, электропоезда.</p><div class="history">Первый электродвигатель создал Майкл Фарадей в 1821 году. Современные двигатели имеют КПД до 90%.</div>` },
+          "Световые явления. Отражение и преломление света": { content: `<h2 class="text-2xl font-bold mb-4">Геометрическая оптика</h2><p>Законы отражения: луч падающий, отражённый и перпендикуляр лежат в одной плоскости; угол падения равен углу отражения. Законы преломления: sinα/sinβ = n₂₁ = n₂/n₁. Абсолютный показатель преломления n = c/v. Линзы бывают собирающие (положительные) и рассеивающие (отрицательные). Формула тонкой линзы: 1/F = 1/d + 1/f. Оптическая сила D = 1/F (дптр).</p><div class="example">Предмет расположен на расстоянии 30 см от собирающей линзы с фокусом 20 см. Изображение: 1/f = 1/20 - 1/30 = (3-2)/60 = 1/60 → f = 60 см, увеличение = f/d = 2.</div>` }
+        }
+      },
+      9: {
+        name: "9",
+        topics: {
+          "Кинематика. Равномерное и равноускоренное движение": { content: `<h2 class="text-2xl font-bold mb-4">Основы кинематики</h2><p>Кинематика изучает движение тел без учёта причин. Основные понятия: перемещение, скорость, ускорение. Равноускоренное движение: a = (v - v₀)/t. Уравнения: v = v₀ + at, x = x₀ + v₀t + at²/2. Свободное падение: g = 9,8 м/с². Движение по окружности: угловая скорость ω = φ/t, центростремительное ускорение a<sub>ц</sub> = v²/R = ω²R.</p><div class="formula">Для равноускоренного движения без начальной скорости: v = at, S = at²/2, v² = 2aS.</div><div class="example">Тело начинает падать с высоты 45 м. Время падения t = √(2h/g) = √(90/10) = 3 с. Скорость в конце v = gt = 30 м/с.</div><div class="task">Задача: Автомобиль, двигаясь равноускоренно, за 5 с увеличил скорость с 10 до 20 м/с. Найдите ускорение и пройденный путь. (a = 2 м/с², S = 75 м).</div>` },
+          "Динамика. Законы Ньютона": { content: `<h2 class="text-2xl font-bold mb-4">Законы Ньютона</h2><p>I закон: существуют инерциальные системы отсчёта, в которых тело сохраняет состояние покоя или равномерного прямолинейного движения, если на него не действуют силы. II закон: F = m·a. III закон: F₁₂ = -F₂₁. Закон всемирного тяготения: F = G·m₁·m₂/R², G = 6,67·10⁻¹¹ Н·м²/кг². Сила трения: F<sub>тр</sub> = μ·N.</p><div class="example">На тело массой 5 кг действует сила 20 Н. Ускорение a = F/m = 4 м/с². Если коэффициент трения 0,2, то сила трения = 0,2·5·10 = 10 Н, равнодействующая = 10 Н, ускорение = 2 м/с².</div>` },
+          "Импульс. Закон сохранения импульса": { content: `<h2 class="text-2xl font-bold mb-4">Импульс тела и системы</h2><p>Импульс тела p = m·v. Импульс силы = F·Δt = Δp. Закон сохранения импульса: для замкнутой системы векторная сумма импульсов тел остаётся постоянной. Реактивное движение: скорость ракеты v = u·ln(m₀/m).</p><div class="example">Человек массой 70 кг прыгает с лодки массой 100 кг со скоростью 2 м/с относительно берега. Скорость лодки: 70·2 + 100·v = 0 → v = -1,4 м/с.</div>` },
+          "Механическая работа, мощность, энергия. Закон сохранения энергии": { content: `<h2 class="text-2xl font-bold mb-4">Энергия в механике</h2><p>Кинетическая E<sub>к</sub> = mv²/2. Потенциальная в поле тяжести E<sub>п</sub> = mgh, упруго деформированного тела E<sub>п</sub> = kx²/2. Закон сохранения механической энергии: E<sub>к1</sub>+E<sub>п1</sub> = E<sub>к2</sub>+E<sub>п2</sub>. При наличии трения часть энергии переходит во внутреннюю.</p><div class="example">Шар массой 2 кг падает с высоты 10 м. Скорость у земли: √(2gh) = √200 ≈ 14,1 м/с. Кинетическая = 2·200/2 = 200 Дж.</div>` },
+          "Механические колебания. Маятники": { content: `<h2 class="text-2xl font-bold mb-4">Колебательное движение</h2><p>Период T, частота ν = 1/T, амплитуда. Период пружинного маятника: T = 2π√(m/k). Математического: T = 2π√(L/g). Резонанс — возрастание амплитуды при совпадении частоты вынуждающей силы с собственной частотой.</p><div class="example">Маятник длиной 1 м на Земле имеет период T = 2π√(1/9,8) ≈ 2,0 с. На Луне (g=1,6 м/с²) T ≈ 2π√(1/1,6) ≈ 5,0 с.</div>` },
+          "Механические волны. Звук": { content: `<h2 class="text-2xl font-bold mb-4">Волны</h2><p>Продольные и поперечные волны. Длина волны λ = v·T = v/ν. Звук — упругие волны в диапазоне 20–20000 Гц. Скорость звука в воздухе ≈ 330 м/с, в воде ≈ 1500 м/с. Громкость связана с амплитудой, высота тона — с частотой.</p><div class="example">Частота 440 Гц (нота ля) имеет длину волны λ = 330/440 ≈ 0,75 м в воздухе.</div>` },
+          "Электромагнитное поле. Электромагнитная индукция": { content: `<h2 class="text-2xl font-bold mb-4">Явление индукции</h2><p>Электромагнитная индукция — возникновение ЭДС в контуре при изменении магнитного потока. Закон Фарадея: ε<sub>i</sub> = -ΔΦ/Δt. Правило Ленца: индукционный ток направлен так, чтобы противодействовать изменению потока. Трансформатор: U₁/U₂ = N₁/N₂.</p><div class="example">Если в катушке из 1000 витков магнитный поток изменяется на 0,01 Вб за 0,1 с, то ЭДС = 1000·0,01/0,1 = 100 В.</div>` },
+          "Электромагнитные колебания и волны": { content: `<h2 class="text-2xl font-bold mb-4">Колебательный контур</h2><p>Свободные электромагнитные колебания в LC-контуре: T = 2π√(LC). Электромагнитные волны: скорость c = 3·10⁸ м/с. Шкала электромагнитных волн: радиоволны, ИК, видимый свет, УФ, рентген, γ-излучение.</p><div class="example">Контур с L=1 мГн и C=1 мкФ имеет период T = 2π√(10⁻³·10⁻⁶) ≈ 6,28·10⁻⁵ с, частота ≈ 16 кГц.</div>` },
+          "Геометрическая оптика. Линзы. Глаз": { content: `<h2 class="text-2xl font-bold mb-4">Световые лучи</h2><p>Построение изображений в линзах. Формула тонкой линзы. Глаз как оптическая система: аккомодация, близорукость (коррекция рассеивающими линзами), дальнозоркость (собирающими).</p><div class="example">Близорукий человек видит чётко до 50 см. Для коррекции нужны линзы с оптической силой D = -1/0,5 = -2 дптр.</div>` },
+          "Строение атома и атомного ядра": { content: `<h2 class="text-2xl font-bold mb-4">Квантовая физика</h2><p>Планетарная модель атома Резерфорда, постулаты Бора. Радиоактивность: α, β, γ-излучения. Ядерные реакции: деление и синтез. Энергия связи ядра ΔE = Δm·c². Закон радиоактивного распада: N = N₀·2⁻ᵗ/ᵀ.</p><div class="example">Период полураспада радона 3,8 дня. Через 11,4 дня (3 периода) останется 1/8 начального количества.</div>` }
+        }
+      },
+      10: {
+        name: "10",
+        topics: {
+          "Кинематика материальной точки": { content: `<h2 class="text-2xl font-bold mb-4">Кинематика</h2><p>Радиус-вектор, перемещение, скорость, ускорение. Движение по окружности: угловая скорость ω = φ/t, центростремительное ускорение a<sub>ц</sub> = v²/R = ω²R. Уравнения движения: x = x₀ + v₀ₓt + aₓt²/2, vₓ = v₀ₓ + aₓt.</p><div class="formula">При криволинейном движении ускорение раскладывается на тангенциальное a<sub>τ</sub> = dv/dt и нормальное a<sub>n</sub> = v²/R.</div><div class="example">Автомобиль на повороте радиусом 50 м движется со скоростью 20 м/с. Нормальное ускорение = 400/50 = 8 м/с².</div>` },
+          "Динамика материальной точки": { content: `<h2 class="text-2xl font-bold mb-4">Динамика</h2><p>Законы Ньютона, силы в механике. Движение тела под действием нескольких сил. Решение задач с применением второго закона Ньютона. Сила трения: F<sub>тр</sub> = μ·N. Движение связанных тел, наклонная плоскость.</p><div class="example">Брусок на наклонной плоскости с углом 30° и μ=0,2. Ускорение a = g(sinα - μ cosα) = 10(0,5 - 0,2·0,866) ≈ 3,27 м/с².</div>` },
+          "Законы сохранения в механике": { content: `<h2 class="text-2xl font-bold mb-4">Сохранение импульса и энергии</h2><p>Абсолютно упругий и неупругий удары. Работа консервативных сил. Закон сохранения полной механической энергии. Мощность силы. Удар: при неупругом ударе часть энергии переходит во внутреннюю.</p><div class="example">Шар массой 2 кг, летящий со скоростью 4 м/с, сталкивается с неподвижным шаром массой 3 кг. При неупругом ударе скорость = (2·4)/(2+3) = 1,6 м/с.</div>` },
+          "Статика и гидростатика": { content: `<h2 class="text-2xl font-bold mb-4">Равновесие тел</h2><p>Условия равновесия: сумма сил = 0, сумма моментов = 0. Центр масс. Гидростатика: давление, закон Паскаля, Архимедова сила. Плавание тел.</p><div class="formula">Момент силы: M = F·l, где l — плечо (расстояние от оси до линии действия силы).</div>` },
+          "Молекулярно-кинетическая теория": { content: `<h2 class="text-2xl font-bold mb-4">МКТ идеального газа</h2><p>Основное уравнение МКТ: p = (1/3)·n·m₀·v²<sub>кв</sub> = (1/3)·ρ·v²<sub>кв</sub>. Температура: (3/2)kT = E<sub>к</sub>. Уравнение состояния: pV = νRT, R = 8,31 Дж/(моль·К). Изопроцессы: изотермический (pV=const), изобарный (V/T=const), изохорный (p/T=const).</p><div class="example">В баллоне 2 м³ находится 5 моль газа при 300 К. Давление p = νRT/V = 5·8,31·300/2 ≈ 6232 Па.</div>` },
+          "Термодинамика": { content: `<h2 class="text-2xl font-bold mb-4">Начала термодинамики</h2><p>Первый закон: ΔU = Q + A'. Второй закон: энтропия, направление теплопередачи. Тепловые двигатели, цикл Карно, КПД. Принцип работы холодильной машины.</p><div class="formula">КПД идеального цикла Карно: η = 1 - T<sub>х</sub>/T<sub>н</sub>.</div>` },
+          "Электростатика": { content: `<h2 class="text-2xl font-bold mb-4">Электрическое поле</h2><p>Закон Кулона, напряжённость, потенциал. Связь E и φ: E = -grad φ. Проводники и диэлектрики в поле. Конденсаторы, энергия поля: W = qU/2 = CU²/2.</p><div class="example">Плоский конденсатор с площадью пластин 0,01 м² и расстоянием 1 мм имеет ёмкость C = ε₀S/d ≈ 8,85·10⁻¹²·0,01/0,001 = 8,85·10⁻¹¹ Ф. При напряжении 100 В заряд q = CU = 8,85·10⁻⁹ Кл.</div>` },
+          "Постоянный электрический ток": { content: `<h2 class="text-2xl font-bold mb-4">Законы постоянного тока</h2><p>Закон Ома для полной цепи: I = ε/(R+r). Правила Кирхгофа. Мощность тока. Электрический ток в различных средах: металлы, электролиты, газы, полупроводники.</p><div class="formula">Для узла цепи: сумма токов равна нулю (правило Кирхгофа). Для контура: сумма падений напряжений равна сумме ЭДС.</div>` },
+          "Магнитное поле. Электромагнитная индукция": { content: `<h2 class="text-2xl font-bold mb-4">Магнетизм</h2><p>Сила Лоренца: F<sub>Л</sub> = q·v·B·sinα. ЭДС индукции, самоиндукция. Энергия магнитного поля: W = LI²/2. Вихревое электрическое поле.</p><div class="example">Электрон влетает в однородное магнитное поле с B=0,01 Тл перпендикулярно линиям. Радиус траектории r = mv/(qB) = 9,1·10⁻³¹·10⁵/(1,6·10⁻¹⁹·0,01) ≈ 5,7·10⁻⁴ м.</div>` },
+          "Колебания и волны. Оптика. Квантовая физика": { content: `<h2 class="text-2xl font-bold mb-4">Современная физика</h2><p>Электромагнитные колебания, волновые свойства света. Интерференция, дифракция, поляризация. Фотоэффект, постулаты Бора, строение атомного ядра. Элементарные частицы.</p><div class="formula">Уравнение Эйнштейна для фотоэффекта: hν = A<sub>вых</sub> + mv²/2.</div>` }
+        }
+      }
+    };
+
+    // DOM manipulation
+    const classSelection = document.getElementById('classSelection');
+    const topicsContainer = document.getElementById('topicsContainer');
+    const topicDetailContainer = document.getElementById('topicDetailContainer');
+    const topicsListDiv = document.getElementById('topicsList');
+    const currentGradeSpan = document.getElementById('currentGrade');
+    const backToClassesBtn = document.getElementById('backToClasses');
+    const backToTopicsBtn = document.getElementById('backToTopics');
+    const topicTitleSpan = document.getElementById('topicTitle');
+    const topicContentDiv = document.getElementById('topicContent');
+    const topicPlaceholder = document.getElementById('topicPlaceholder');
+
+    let currentGrade = null;
+    let currentTopic = null;
+
+    function resetTopicCards() {
+      document.querySelectorAll('.topic-chip').forEach(el => el.classList.remove('topic-chip-active'));
+    }
+
+    function showTopics(grade) {
+      currentGrade = grade;
+      currentTopic = null;
+      const data = topicsDB[grade];
+      if (!data) return;
+      currentGradeSpan.textContent = grade;
+      topicsContainer.classList.remove('hidden');
+      topicDetailContainer.classList.add('hidden');
+      topicPlaceholder.classList.remove('hidden');
+      topicPlaceholder.classList.add('flex');
+
+      const topics = Object.keys(data.topics);
+      topicsListDiv.innerHTML = topics.map(topic => `
+        <button class="topic-chip text-left" data-topic="${topic}">
+          <div class="flex items-start justify-between gap-3">
+            <div class="min-w-0">
+              <div class="text-xs uppercase tracking-[0.18em] text-cyan-200/70 mb-2">Тема</div>
+              <h4 class="font-semibold text-slate-50 leading-snug">${topic}</h4>
+            </div>
+            <i data-lucide="chevron-right" class="w-5 h-5 text-slate-400 shrink-0"></i>
+          </div>
+        </button>
+      `).join('');
+      lucide.createIcons();
+      document.querySelectorAll('.topic-chip').forEach(card => {
+        card.addEventListener('click', () => showTopicDetail(grade, card.getAttribute('data-topic')));
+      });
+      resetTopicCards();
+    }
+
+    function showTopicDetail(grade, topicName) {
+      const data = topicsDB[grade];
+      if (!data || !data.topics[topicName]) return;
+      currentTopic = topicName;
+      topicTitleSpan.textContent = topicName;
+      topicContentDiv.innerHTML = data.topics[topicName].content;
+      topicsContainer.classList.remove('hidden');
+      topicDetailContainer.classList.remove('hidden');
+      topicPlaceholder.classList.add('hidden');
+      resetTopicCards();
+      const active = [...document.querySelectorAll('.topic-chip')].find(el => el.getAttribute('data-topic') === topicName);
+      if (active) active.classList.add('topic-chip-active');
+      // Прокрутка вверх убрана
+    }
+
+    function backToTopics() {
+      if (currentGrade) {
+        topicDetailContainer.classList.add('hidden');
+        topicPlaceholder.classList.remove('hidden');
+        topicPlaceholder.classList.add('flex');
+        resetTopicCards();
+      }
+    }
+
+    function backToClasses() {
+      topicsContainer.classList.add('hidden');
+      topicDetailContainer.classList.add('hidden');
+      topicPlaceholder.classList.remove('hidden');
+    }
+
+    document.querySelectorAll('.class-btn').forEach(btn => btn.addEventListener('click', () => showTopics(btn.getAttribute('data-grade'))));
+    if (backToClassesBtn) backToClassesBtn.addEventListener('click', backToClasses);
+    if (backToTopicsBtn) backToTopicsBtn.addEventListener('click', backToTopics);
+  </script>
+</body>
+</html>
